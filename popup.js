@@ -279,7 +279,7 @@ window.onload = function () {
                     });
                 } else {
                     document.getElementById("status").textContent =
-                        "No estás en el portal del SAT. Haz clic en 'Ir al SAT' primero.";
+                        "No estás en el portal de facturas del SAT. Haz clic en 'Ir al SAT' primero.";
                 }
             },
         );
