@@ -6,50 +6,46 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Descarga Masiva SAT</title>
 
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-
     <script src="popup.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container text-center">
-      <h4 class="py-2">Descarga Masiva SAT</h4>
+    <div class="container">
+      <h4>Descarga Masiva SAT</h4>
 
-      <div class="py-2">
-        <button class="btn btn-info btn-sm" id="iralsat">Ir al SAT</button>
-      </div>
-      <div class="py-2">
-        <button class="btn btn-primary btn-sm" id="descargarxml">
-          <span class="badge badge-light" id="cuenta-xml"></span>
+      <div class="button-grid">
+        <button class="btn btn-blue" id="iralsat">
+          <span class="icon">↗️</span>
+          Ir al SAT
+        </button>
+
+        <button class="btn btn-indigo" id="descargarxml">
+          <span class="badge" id="cuenta-xml"></span>
+          <span class="icon">📄</span>
           Descargar XML
         </button>
-      </div>
-      <div class="py-2">
-        <button class="btn btn-primary btn-sm" id="descargarpdf">
-          <span class="badge badge-light" id="cuenta-pdf"></span>
+
+        <button class="btn btn-indigo" id="descargarpdf">
+          <span class="badge" id="cuenta-pdf"></span>
+          <span class="icon">📑</span>
           Descargar PDF
         </button>
-      </div>
-      <div class="py-2">
-        <button class="btn btn-success btn-sm" id="analizar">
+
+        <button class="btn btn-green" id="analizar">
+          <span class="icon">📊</span>
           Analizar XMLs
         </button>
       </div>
+
       <div class="py-2">
-        <div id="status"></div>
+        <div id="status" class="status"></div>
       </div>
-      <div class="py-2">
-        <button class="btn btn-default btn-sm" id="manual">
+
+      <div class="divider">
+        <button class="btn btn-gray" id="manual">
+          <span class="icon">📖</span>
           Manual de uso
         </button>
-      </div>
-      <div class="py-2">
-        Desarrollado por: <br /><a href="#" id="enlace">Eduardo Aranda</a>
       </div>
     </div>
   </body>
