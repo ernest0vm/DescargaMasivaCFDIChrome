@@ -142,6 +142,18 @@ function descargartodo() {
     }
 }
 
+// Función para actualizar un badge, ocultándolo si está vacío o es cero
+function actualizarBadge(elementId, valor) {
+    var badge = document.getElementById(elementId);
+    if (!valor || valor === 0 || valor === "0") {
+        badge.classList.add('hidden');
+        badge.innerText = "";
+    } else {
+        badge.classList.remove('hidden');
+        badge.innerText = valor;
+    }
+}
+
 //listener que recibe los elaces de send_links.js
 chrome.runtime.onMessage.addListener(function (message) {
     console.log("Mensaje recibido en popup:", message);
@@ -162,13 +174,13 @@ chrome.runtime.onMessage.addListener(function (message) {
 
         allLinks = links;
 
-        // Cambiamos los textos de los botones
-        document.getElementById("cuenta-xml").innerText = allLinks[0].length || "0";
-        document.getElementById("cuenta-pdf").innerText = allLinks[1].length || "0";
+        // Cambiamos los textos de los botones y actualizamos los badges
+        actualizarBadge("cuenta-xml", allLinks[0].length);
+        actualizarBadge("cuenta-pdf", allLinks[1].length);
 
         // Total para el botón "Descargar Todo"
         var total = (allLinks[0].length || 0) + (allLinks[1].length || 0);
-        document.getElementById("cuenta-total").innerText = total || "0";
+        actualizarBadge("cuenta-total", total);
 
         // Habilitar/deshabilitar botones según si hay contenido para descargar
         document.getElementById("descargarxml").disabled = allLinks[0].length === 0;
@@ -217,6 +229,12 @@ window.onload = function () {
     document.getElementById("descargarxml").disabled = true;
     document.getElementById("descargarpdf").disabled = true;
     document.getElementById("descargartodo").disabled = true;
+
+    // Ocultar todos los badges inicialmente
+    actualizarBadge("cuenta-xml", 0);
+    actualizarBadge("cuenta-pdf", 0);
+    actualizarBadge("cuenta-total", 0);
+
     document.getElementById("status").textContent = "Esperando a la página del SAT...";
 
     //esta función inyecta un JS a la tab activa para enviar los enlaces al listener

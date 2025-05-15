@@ -114,6 +114,11 @@ h4 {
   border-radius: 9999px;
 }
 
+.badge:empty,
+.badge.hidden {
+  display: none;
+}
+
 .icon {
   margin-right: 0.5rem;
   font-size: 0.875rem;
