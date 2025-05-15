@@ -12,8 +12,8 @@ function descargarxml() {
     // luego ejecutamos un intervalo cada 1000 milisegundos para extraer un elemento del array y descargarlo
     // cuando no haya elementos, cancelar el intervalo.
     //los xml están en el array en posición 0
-    var urls = allLinks[0];
-    var nombres = allLinks[2];
+    var urls = [...allLinks[0]]; // Creamos una copia para no modificar el original
+    var nombres = [...allLinks[2]]; // Creamos una copia para no modificar el original
     var interval = setInterval(function () {
         var url = urls.shift();
         var nombre = nombres.shift();
@@ -28,6 +28,7 @@ function descargarxml() {
             );
         } else {
             clearInterval(interval);
+            document.getElementById("status").textContent = "Descarga de XML completada";
         }
     }, 1000);
 }
@@ -44,8 +45,8 @@ function descargarpdf() {
     // luego ejecutamos un intervalo cada 1000 milisegundos para extraer un elemento del array y descargarlo
     // cuando no haya elementos, cancelar el intervalo.
     //los pdf están en el array en posición 1
-    var urls = allLinks[1];
-    var nombres = allLinks[2];
+    var urls = [...allLinks[1]]; // Creamos una copia para no modificar el original
+    var nombres = [...allLinks[2]]; // Creamos una copia para no modificar el original
     var interval = setInterval(function () {
         var url = urls.shift();
         var nombre = nombres.shift();
@@ -60,9 +61,87 @@ function descargarpdf() {
             );
         } else {
             clearInterval(interval);
+            document.getElementById("status").textContent = "Descarga de PDF completada";
         }
     }, 1000);
 }
+
+function descargartodo() {
+    document.getElementById("status").textContent = "Descargando todos los archivos...";
+
+    // Verificar que tenemos al menos un tipo de archivo para descargar
+    if (!allLinks ||
+        (!allLinks[0] || allLinks[0].length === 0) &&
+        (!allLinks[1] || allLinks[1].length === 0)) {
+        document.getElementById("status").textContent = "No hay archivos para descargar";
+        return;
+    }
+
+    // Crear un contador para saber cuándo hemos terminado todas las descargas
+    var totalDescargas = 0;
+    if (allLinks[0] && allLinks[0].length > 0) totalDescargas += allLinks[0].length;
+    if (allLinks[1] && allLinks[1].length > 0) totalDescargas += allLinks[1].length;
+
+    var descargasRealizadas = 0;
+
+    // Función para actualizar el progreso
+    function actualizarProgreso() {
+        descargasRealizadas++;
+        document.getElementById("status").textContent = "Descargando... " +
+            descargasRealizadas + " de " + totalDescargas;
+
+        if (descargasRealizadas >= totalDescargas) {
+            document.getElementById("status").textContent = "Todas las descargas completadas";
+        }
+    }
+
+    // Descargar XMLs si hay disponibles
+    if (allLinks[0] && allLinks[0].length > 0 && allLinks[2]) {
+        var xmlUrls = [...allLinks[0]];
+        var xmlNombres = [...allLinks[2]];
+        var xmlInterval = setInterval(function () {
+            var url = xmlUrls.shift();
+            var nombre = xmlNombres.shift();
+            if (url) {
+                chrome.downloads.download(
+                    {
+                        url: url,
+                        filename: nombre + ".xml",
+                    },
+                    function (id) {
+                        actualizarProgreso();
+                    }
+                );
+            } else {
+                clearInterval(xmlInterval);
+            }
+        }, 800); // Ligeramente más rápido para no hacer esperar tanto
+    }
+
+    // Descargar PDFs si hay disponibles
+    if (allLinks[1] && allLinks[1].length > 0 && allLinks[2]) {
+        var pdfUrls = [...allLinks[1]];
+        var pdfNombres = [...allLinks[2]];
+        var pdfInterval = setInterval(function () {
+            var url = pdfUrls.shift();
+            var nombre = pdfNombres.shift();
+            if (url) {
+                chrome.downloads.download(
+                    {
+                        url: url,
+                        filename: nombre + ".pdf",
+                    },
+                    function (id) {
+                        actualizarProgreso();
+                    }
+                );
+            } else {
+                clearInterval(pdfInterval);
+            }
+        }, 800); // Ligeramente más rápido para no hacer esperar tanto
+    }
+}
+
 //listener que recibe los elaces de send_links.js
 chrome.runtime.onMessage.addListener(function (message) {
     console.log("Mensaje recibido en popup:", message);
@@ -87,9 +166,14 @@ chrome.runtime.onMessage.addListener(function (message) {
         document.getElementById("cuenta-xml").innerText = allLinks[0].length || "0";
         document.getElementById("cuenta-pdf").innerText = allLinks[1].length || "0";
 
+        // Total para el botón "Descargar Todo"
+        var total = (allLinks[0].length || 0) + (allLinks[1].length || 0);
+        document.getElementById("cuenta-total").innerText = total || "0";
+
         // Habilitar/deshabilitar botones según si hay contenido para descargar
         document.getElementById("descargarxml").disabled = allLinks[0].length === 0;
         document.getElementById("descargarpdf").disabled = allLinks[1].length === 0;
+        document.getElementById("descargartodo").disabled = total === 0;
 
         // Mostrar mensaje
         if (allLinks[0].length > 0 || allLinks[1].length > 0) {
@@ -110,6 +194,7 @@ window.onload = function () {
     //botones
     document.getElementById("descargarxml").onclick = descargarxml;
     document.getElementById("descargarpdf").onclick = descargarpdf;
+    document.getElementById("descargartodo").onclick = descargartodo;
 
     //enlaces
     document.getElementById("analizar").onclick = function () {
@@ -131,6 +216,7 @@ window.onload = function () {
     // Verificar estado inicial de los botones
     document.getElementById("descargarxml").disabled = true;
     document.getElementById("descargarpdf").disabled = true;
+    document.getElementById("descargartodo").disabled = true;
     document.getElementById("status").textContent = "Esperando a la página del SAT...";
 
     //esta función inyecta un JS a la tab activa para enviar los enlaces al listener

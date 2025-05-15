@@ -68,6 +68,15 @@ h4 {
   background-color: #4338ca;
 }
 
+.btn-purple {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #7c3aed;
+}
+
 .btn-green {
   background-color: #10b981;
   color: white;
@@ -84,6 +93,12 @@ h4 {
 
 .btn-gray:hover {
   background-color: #e5e7eb;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .badge {
