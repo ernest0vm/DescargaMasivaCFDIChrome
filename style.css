@@ -166,3 +166,24 @@ h4 {
 .mt-4 {
   margin-top: 1rem;
 }
+
+.footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.footer .link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}

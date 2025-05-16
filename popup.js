@@ -225,6 +225,12 @@ window.onload = function () {
         });
     };
 
+    document.getElementById("contributors").onclick = function () {
+        chrome.tabs.create({
+            url: "https://github.com/eduardoarandah/DescargaMasivaCFDIChrome/graphs/contributors",
+        });
+    };
+
     // Verificar estado inicial de los botones
     document.getElementById("descargarxml").disabled = true;
     document.getElementById("descargarpdf").disabled = true;
